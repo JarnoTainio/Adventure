@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3 uid="uid://bd3c3lsqaijjx"]
+
+[ext_resource type="Script" path="res://Scripts/Data/item.gd" id="1_g74je"]
+[ext_resource type="Texture2D" uid="uid://jxg3yhpuo41i" path="res://Sprites/Items/Seed2.png" id="2_lsov6"]
+
+[resource]
+script = ExtResource("1_g74je")
+name = "slime"
+sprite = ExtResource("2_lsov6")
