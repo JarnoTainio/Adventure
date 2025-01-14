@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=4 format=3 uid="uid://ddxrj5qnpcx2w"]
+
+[ext_resource type="Resource" uid="uid://bd3c3lsqaijjx" path="res://Resources/Items/item_slime.tres" id="1_hp63i"]
+[ext_resource type="Script" path="res://Scripts/Data/enemy.gd" id="1_v4tr3"]
+[ext_resource type="Resource" uid="uid://bmh2mnj4qg4jf" path="res://Resources/Items/item_slime_gold.tres" id="2_5x4gj"]
+
+[resource]
+script = ExtResource("1_v4tr3")
+loot_common = ExtResource("1_hp63i")
+loot_rare = ExtResource("2_5x4gj")

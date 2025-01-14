@@ -6,22 +6,32 @@ signal hit_by_attack(attack: Attack)
 
 var colliders: Array[Area2D] = []
 
-func _on_area_entered(area: HitBox):
-	print_debug("hurt_box " + get_parent().name + " hit: ")
-	if area == null: return
-	
-	# var attack = to_attack(area)
-	# hit_by_attack.emit(attack)
-	# if remember_areas: colliders.append(area)
+func _ready():
+	collision_layer = 0
+	collision_mask = 4
+	area_entered.connect(_on_area_entered)
+	area_exited.connect(_on_area_exited)
 
-func _on_area_exited(area: Area2D):
-	if area.name != "HitBox": return
+
+# Signals
+
+func _on_area_entered(area: HitBox):
+	if area == null: return
+	if owner.name == area.owner.name: return
+	
+	var attack = to_attack(area)
+	hit_by_attack.emit(attack)
+	if remember_areas: colliders.append(area)
+
+func _on_area_exited(area: HitBox):
 	if remember_areas: colliders.erase(area)
+
+# Functions
 
 func to_attack(area: Area2D) -> Attack:
 	var attack = Attack.new()
 	attack.damage = 1
-	attack.velocity = area.get_parent().velocity
+	attack.velocity = area.owner.velocity
 	attack.knockback = 10
 	return attack
 

@@ -30,6 +30,8 @@ var collect_timer: float
 func _ready():
 	current_health = max_health
 	effects.play("RESET")
+	weapon.visible = false
+	interactMarker.visible = false
 
 
 func _physics_process(delta: float):
@@ -82,7 +84,6 @@ func _on_hurt_box_hit_by_attack(attack: Attack):
 
 
 func take_damage(damage: int):
-	print(hurtTimer.time_left)
 	if hurtTimer.time_left > 0: return
 	current_health -= damage
 	effects.play("hurt_blink")
