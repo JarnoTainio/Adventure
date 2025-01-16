@@ -1,6 +1,6 @@
 class_name MonsterManager extends Node2D
 
-@onready var slime_prefab = preload("res://Scenes/Creatures/Enemies/Slime.tscn")
+@onready var slime_prefab = preload("res://Scenes/Creatures/Enemies/slime.tscn")
 
 func spawn_enemy(pos: Vector2):
   var enemy = slime_prefab.instantiate()

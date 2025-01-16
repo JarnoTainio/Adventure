@@ -1,4 +1,4 @@
-class_name Player extends CharacterBody2D
+class_name Player extends Creature
 
 signal health_changed(current_health: int)
 
@@ -8,6 +8,7 @@ signal health_changed(current_health: int)
 @onready var hurtBox: HurtBox = $HurtBox
 @onready var interactMarker: Sprite2D = $InteractMarker
 @onready var weapon = $Weapon
+@onready var state_machine = $StateMachine
 
 @onready var inventory: Inventory = preload("res://Resources/inventory_player.tres")
 
@@ -32,13 +33,15 @@ func _ready():
 	effects.play("RESET")
 	weapon.visible = false
 	interactMarker.visible = false
+	state_machine._initialize()
 
-
-func _physics_process(delta: float):
+func _process(delta):
 	handle_input(delta)
-	move_and_slide()
-	update_animation()
+	state_machine._process(delta)
+
+func _physics_process(_delta: float):
 	update_indicator()
+	move_and_slide()
 
 
 func handle_input(delta: float):
@@ -65,14 +68,12 @@ func perform_attack():
 	weapon.visible = false
 
 
-func update_animation():
-	if is_attacking: return
-	if velocity.length() == 0:
-		animation.stop()
-		return
+func set_animation(state: String):
 	last_dir = Vector.vector_to_dir_string(velocity)
-	animation.play("move_" + last_dir)
+	animation.play(state + "_" + last_dir)
 
+func stop_animation():
+	animation.stop()
 
 func update_indicator():
 	if target_item != null:

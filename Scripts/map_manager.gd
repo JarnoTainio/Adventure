@@ -35,11 +35,9 @@ func generate_map():
 			copy_tiles(chunk_piece, offset)
 			
 			var monsters = randi() % 10 - 2
-			print("=== " + str(x) + "," + str(y))
 			for i in range(monsters):
 				var spawn_offset = Vector2(randi() % chunk_size, randi() % chunk_size)
 				var spawn = (offset + spawn_offset) * Vector.TILE_SIZE
-				print(spawn)
 				monster_manager.spawn_enemy(spawn)
 
 	map_updated.emit()
