@@ -2,6 +2,7 @@ class_name Slime extends CharacterBody2D
 
 @onready var item_prefab = preload("res://Scenes/Items/collectible.tscn")
 @onready var animation = $AnimationPlayer
+@onready var hitBox: HitBox = $HitBox
 
 @export var data: EnemyData = preload("res://Resources/Enemies/eney_slime.tres")
 @export var move_speed: int = 30
@@ -50,6 +51,8 @@ func update_animation():
 func die():
 	is_dead = true
 	animation.play("death")
+	hitBox.enable(false)
+	$CollisionShape2D.set_deferred("disabled", true)
 	await animation.animation_finished
 	if data.loot_common: spawn_item()
 	queue_free()
