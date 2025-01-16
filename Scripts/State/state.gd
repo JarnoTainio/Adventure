@@ -13,5 +13,8 @@ func enter():
 func exit():
 	pass
 
-func tick(_delta: float):
-	pass
+func tick(_delta: float) -> State:
+	return null
+
+func handle_input(_event: InputEvent) -> State:
+	return null

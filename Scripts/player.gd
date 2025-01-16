@@ -2,7 +2,6 @@ class_name Player extends Creature
 
 signal health_changed(current_health: int)
 
-@onready var animation = $AnimationPlayer
 @onready var effects = $EffectPlayer
 @onready var hurtTimer: Timer = $HurtTimer
 @onready var hurtBox: HurtBox = $HurtBox
@@ -30,6 +29,7 @@ var collect_timer: float
 
 func _ready():
 	current_health = max_health
+	animation = $AnimationPlayer
 	effects.play("RESET")
 	weapon.visible = false
 	interactMarker.visible = false
@@ -54,12 +54,8 @@ func handle_input(delta: float):
 	# Interacting
 	if is_collecting: collect_timer -= delta
 
-	# Combat
-	if Input.is_action_just_pressed("Attack"):
-		perform_attack()
 
-
-func perform_attack():
+func attack():
 	animation.play("attack_" + last_dir)
 	is_attacking = true
 	weapon.visible = true
@@ -69,7 +65,8 @@ func perform_attack():
 
 
 func set_animation(state: String):
-	last_dir = Vector.vector_to_dir_string(velocity)
+	if velocity != Vector2.ZERO:
+		last_dir = Vector.vector_to_dir_string(velocity)
 	animation.play(state + "_" + last_dir)
 
 func stop_animation():
@@ -79,9 +76,9 @@ func update_indicator():
 	if target_item != null:
 		interactMarker.global_position = target_item.global_position + Vector2(0, -4)
 
-func _on_hurt_box_hit_by_attack(attack: Attack):
-	take_damage(attack.damage)
-	knockback(attack.knockback, attack.velocity)
+func _on_hurt_box_hit_by_attack(_attack: Attack):
+	take_damage(_attack.damage)
+	knockback(_attack.knockback, _attack.velocity)
 
 
 func take_damage(damage: int):
@@ -96,8 +93,8 @@ func take_damage(damage: int):
 
 	await hurtTimer.timeout
 	effects.play("RESET")
-	var attack = hurtBox.get_attack()
-	if attack != null: _on_hurt_box_hit_by_attack(attack)
+	var _attack = hurtBox.get_attack()
+	if _attack != null: _on_hurt_box_hit_by_attack(_attack)
 
 
 func knockback(power: int, hit_velocity: Vector2):
@@ -107,6 +104,7 @@ func knockback(power: int, hit_velocity: Vector2):
 
 
 func _input(event):
+	if state_machine.handle_input(event): return
 	if event.is_action_pressed("space"):
 		if target_item == null: return
 		target_item.collect(inventory)
