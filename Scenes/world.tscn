@@ -1,11 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://1dd6m1jwx0yf"]
+[gd_scene load_steps=12 format=3 uid="uid://1dd6m1jwx0yf"]
 
 [ext_resource type="Script" path="res://Scripts/worldManager.gd" id="1_8s0pn"]
 [ext_resource type="PackedScene" uid="uid://cjtj0uvx0uuj0" path="res://Scenes/Creatures/player.tscn" id="1_srd8d"]
 [ext_resource type="TileSet" uid="uid://cpadeqjgwaat3" path="res://Tilesets/tileset_plains.tres" id="2_ysup1"]
 [ext_resource type="Script" path="res://Scripts/map_manager.gd" id="3_h7iwk"]
 [ext_resource type="Script" path="res://Scripts/follow_camera.gd" id="4_3d7og"]
-[ext_resource type="PackedScene" uid="uid://cmss22mnd3up2" path="res://Scenes/Creatures/slime.tscn" id="5_3gabs"]
+[ext_resource type="Script" path="res://Scripts/Enemies/MonsterManager.gd" id="4_smvs6"]
+[ext_resource type="PackedScene" uid="uid://cmss22mnd3up2" path="res://Scenes/Creatures/Enemies/slime.tscn" id="5_3gabs"]
+[ext_resource type="PackedScene" uid="uid://gg4cbkrkuxgh" path="res://Scenes/area_exit.tscn" id="5_yp7le"]
 [ext_resource type="PackedScene" uid="uid://mkf0evplmwdv" path="res://Scenes/UI/heart_container.tscn" id="6_hwol0"]
 [ext_resource type="Script" path="res://Scripts/UI/ui_manager.gd" id="7_im255"]
 [ext_resource type="PackedScene" uid="uid://bu72mwds4jhaq" path="res://Scenes/UI/inventory.tscn" id="8_1lqnw"]
@@ -14,7 +16,7 @@
 y_sort_enabled = true
 script = ExtResource("1_8s0pn")
 
-[node name="TileMap" type="TileMap" parent="." node_paths=PackedStringArray("tilemap")]
+[node name="MapManager" type="TileMap" parent="." node_paths=PackedStringArray("tilemap")]
 y_sort_enabled = true
 tile_set = ExtResource("2_ysup1")
 format = 2
@@ -25,25 +27,28 @@ layer_1/z_index = 1
 layer_1/tile_data = PackedInt32Array()
 script = ExtResource("3_h7iwk")
 tilemap = NodePath(".")
+map_width = 4
+map_height = 4
 
-[node name="Monsters" type="Node2D" parent="TileMap"]
+[node name="MonsterManager" type="Node2D" parent="MapManager"]
+script = ExtResource("4_smvs6")
 
-[node name="Slime" parent="TileMap/Monsters" instance=ExtResource("5_3gabs")]
+[node name="Slime" parent="MapManager/MonsterManager" instance=ExtResource("5_3gabs")]
 position = Vector2(80, 120)
 move_speed = 1500
 end_position = Vector2(0, 4)
 
-[node name="Slime2" parent="TileMap/Monsters" instance=ExtResource("5_3gabs")]
+[node name="Slime2" parent="MapManager/MonsterManager" instance=ExtResource("5_3gabs")]
 position = Vector2(112, 64)
 move_speed = 1500
 end_position = Vector2(3, 0)
 
-[node name="Slime3" parent="TileMap/Monsters" instance=ExtResource("5_3gabs")]
+[node name="Slime3" parent="MapManager/MonsterManager" instance=ExtResource("5_3gabs")]
 position = Vector2(136, 136)
 move_speed = 1500
 end_position = Vector2(2, 0)
 
-[node name="Items" type="Node2D" parent="TileMap"]
+[node name="Items" type="Node2D" parent="MapManager"]
 
 [node name="Player" parent="." instance=ExtResource("1_srd8d")]
 position = Vector2(80, 72)
@@ -54,9 +59,8 @@ limit_left = 0
 limit_top = 0
 limit_right = 580
 limit_bottom = 320
-position_smoothing_enabled = true
 script = ExtResource("4_3d7og")
-tilemap = NodePath("../../TileMap")
+tilemap = NodePath("../../MapManager")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 script = ExtResource("7_im255")
@@ -72,5 +76,26 @@ anchor_bottom = 1.0
 offset_top = -60.0
 offset_bottom = 0.0
 grow_vertical = 0
+
+[node name="Exits" type="Node2D" parent="."]
+
+[node name="AreaExit" parent="Exits" instance=ExtResource("5_yp7le")]
+position = Vector2(0, 256)
+direction = 2
+size = 68
+
+[node name="AreaExit2" parent="Exits" instance=ExtResource("5_yp7le")]
+position = Vector2(256, 0)
+size = 68
+
+[node name="AreaExit3" parent="Exits" instance=ExtResource("5_yp7le")]
+position = Vector2(512, 256)
+direction = 3
+size = 68
+
+[node name="AreaExit4" parent="Exits" instance=ExtResource("5_yp7le")]
+position = Vector2(256, 512)
+direction = 1
+size = 68
 
 [connection signal="ui_is_open" from="CanvasLayer" to="." method="_on_ui_is_open"]

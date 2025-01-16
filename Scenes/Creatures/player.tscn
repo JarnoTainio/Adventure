@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cjtj0uvx0uuj0"]
+[gd_scene load_steps=26 format=3 uid="uid://cjtj0uvx0uuj0"]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_rf48v"]
 [ext_resource type="Texture2D" uid="uid://813gysn8scvl" path="res://Sprites/Characters/SpriteSheet.png" id="1_t4xj8"]
@@ -6,6 +6,9 @@
 [ext_resource type="Script" path="res://Scripts/interact_detector.gd" id="4_umfqv"]
 [ext_resource type="Texture2D" uid="uid://08q8jkl2spb6" path="res://Sprites/Arrow.png" id="5_2rco7"]
 [ext_resource type="PackedScene" uid="uid://6gw71yswasbg" path="res://Scenes/Weapons/sword.tscn" id="6_xfdmo"]
+[ext_resource type="Script" path="res://Scripts/State/state_machine.gd" id="7_xn3ng"]
+[ext_resource type="Script" path="res://Scripts/State/Player/state_player_idle.gd" id="8_rgrkg"]
+[ext_resource type="Script" path="res://Scripts/State/Player/state_player_walk.gd" id="9_qoxun"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_oadbt"]
 size = Vector2(12, 8)
@@ -403,6 +406,15 @@ position = Vector2(6, -1)
 rotation = 2.0944
 
 [node name="Sword" parent="Weapon" instance=ExtResource("6_xfdmo")]
+
+[node name="StateMachine" type="Node2D" parent="."]
+script = ExtResource("7_xn3ng")
+
+[node name="Idle" type="Node2D" parent="StateMachine"]
+script = ExtResource("8_rgrkg")
+
+[node name="Walk" type="Node2D" parent="StateMachine"]
+script = ExtResource("9_qoxun")
 
 [connection signal="hit_by_attack" from="HurtBox" to="." method="_on_hurt_box_hit_by_attack"]
 [connection signal="area_entered" from="InteractBox" to="InteractBox" method="_on_area_entered"]

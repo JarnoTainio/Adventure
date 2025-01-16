@@ -1,5 +1,7 @@
 extends Node
 
+const TILE_SIZE: int = 16
+
 func vector_to_dir_string(vector: Vector2) -> String:
 	var dir = "down"
 	if vector.y < 0: dir = "up"

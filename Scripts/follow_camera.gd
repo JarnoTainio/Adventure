@@ -7,7 +7,7 @@ func _ready():
 
 func update_limits():
 	var mapRect = tilemap.get_used_rect()
-	var worldSize = mapRect.size * 16
+	var worldSize = mapRect.size * Vector.TILE_SIZE
 	limit_right = worldSize.x
 	limit_bottom = worldSize.y
 

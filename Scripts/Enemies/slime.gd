@@ -72,7 +72,7 @@ func spawn_item():
 	item.item = itemData
 	item.global_position = global_position
 	
-	var items_node = get_tree().root.get_node("World/TileMap/Items")
+	var items_node = get_tree().root.get_node("World/MapManager/Items")
 	items_node.add_child(item)
 
 # SIGNALS
