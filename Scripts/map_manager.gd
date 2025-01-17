@@ -19,6 +19,7 @@ signal map_updated
 var chunk_size: int = 16
 
 var map_pos: Vector2i = Vector2i.ZERO
+var spawn_zones: Dictionary = {}
 
 func _ready():
 	generate_map()
@@ -36,9 +37,12 @@ func generate_map():
 			
 			var monsters = randi() % 10 - 2
 			for i in range(monsters):
-				var spawn_offset = Vector2(randi() % chunk_size, randi() % chunk_size)
-				var spawn = (offset + spawn_offset) * Vector.TILE_SIZE
+				var spawn_key: Vector2i = spawn_zones.keys()[randi() % spawn_zones.size()]
+				spawn_zones.erase(spawn_key)
+				var _offset = Vector2i(randi() % 4, randi() % 4)
+				var spawn = (spawn_key * 4 + _offset) * Vector.TILE_SIZE
 				monster_manager.spawn_enemy(spawn)
+			spawn_zones.clear()
 
 	map_updated.emit()
 
@@ -52,6 +56,16 @@ func copy_tiles(chunk_prefab: PackedScene, offset: Vector2):
 				var source_id = chunk_piece.get_cell_source_id(i, pos)
 				var atlas_coord = chunk_piece.get_cell_atlas_coords(i, pos)
 				tilemap.set_cell(i, tile_pos, source_id, atlas_coord)
+
+				if i != 1: continue
+				# Save valid spawn areas
+				var spawn_zone = Vector2i(tile_pos.x / 4, tile_pos.y / 4)
+				if !spawn_zones.has(spawn_zone) || spawn_zones[spawn_zone] == true:
+					spawn_zones[spawn_zone] = atlas_coord == -Vector2i.ONE
+					
+	for zone in spawn_zones:
+		if spawn_zones[zone] == false:
+			spawn_zones.erase(zone)
 	chunk_piece.queue_free()
 
 func _on_area_exit_player_entered_exit(dir):

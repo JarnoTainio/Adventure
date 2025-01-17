@@ -7,11 +7,12 @@ signal hit_by_attack(attack: Attack)
 var colliders: Array[Area2D] = []
 
 func _ready():
-	collision_layer = 0
+	monitoring = true
+	monitorable = false
 	collision_mask = 4
 	area_entered.connect(_on_area_entered)
 	area_exited.connect(_on_area_exited)
-
+	
 
 # Signals
 

@@ -6,7 +6,7 @@ enum Direction {UP, DOWN, LEFT, RIGHT}
 signal player_entered_exit(dir: Direction)
 
 @onready var collision_shape = $CollisionShape2D
-@onready var map_manager: MapManager = get_node("/root/World/MapManager")
+@onready var map_manager: MapManager = %MapManager
 
 @export var direction: Direction:
 	set(_d):
@@ -20,11 +20,13 @@ signal player_entered_exit(dir: Direction)
 		
 
 func _ready():
+	if map_manager == null: return
 	player_entered_exit.connect(map_manager._on_area_exit_player_entered_exit)
 	_update_position()
 	_update_area()
 
 func _update_position():
+	if map_manager == null: return
 	var tile_size: int = Vector.TILE_SIZE
 	var width: int = map_manager.map_width
 	var height: int = map_manager.map_height
